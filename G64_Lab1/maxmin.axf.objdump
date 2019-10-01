@@ -1,0 +1,88 @@
+
+C:/ECSE324-Computer_Organization/G64_Lab1/maxmin.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+ 			
+			.text
+			.global _start
+
+_start:
+			LDR R0, =NUMBERS			// R0 points to the address of the first number
+   0:	e59f0080 	ldr	r0, [pc, #128]	; 88 <MIN+0x4>
+			LDR R1, [R0]				// R1 holds the first number
+   4:	e5901000 	ldr	r1, [r0]
+ 			LDR R2, [R0, #4]			// R2 holds the second number
+   8:	e5902004 	ldr	r2, [r0, #4]
+			LDR R3, [R0, #8]			// R3 holds the third number
+   c:	e5903008 	ldr	r3, [r0, #8]
+			LDR R4, [R0, #12]			// R4 holds the fourth number
+  10:	e590400c 	ldr	r4, [r0, #12]
+			ADD R5, R1, R2				// R5 holds the sum of Num1 and Num2
+  14:	e0815002 	add	r5, r1, r2
+			ADD R6, R3, R4				// R6 holds sum of Num3 and Num4
+  18:	e0836004 	add	r6, r3, r4
+			MUL R5, R5, R6				// R5 is (Num1+Num2)*(Num3+Num4)
+  1c:	e0050695 	mul	r5, r5, r6
+			ADD R6, R1, R3				// R6 holds sum of Num1 and Num3
+  20:	e0816003 	add	r6, r1, r3
+			ADD R7, R2, R4				// R7 holds sum of Num2 and Num4
+  24:	e0827004 	add	r7, r2, r4
+			MUL R6, R6, R7				// R6 is (Num1+Num3)*(Num2+Num4)
+  28:	e0060796 	mul	r6, r6, r7
+			ADD R7, R1, R4				// R7 holds sum of Num1 and Num4
+  2c:	e0817004 	add	r7, r1, r4
+			ADD R8, R2, R3				// R8 holds sum of Num2 and Num3
+  30:	e0828003 	add	r8, r2, r3
+			MUL R7, R7, R8				// R7 is (Num1+Num4)*(Num2+Num3)
+  34:	e0070897 	mul	r7, r7, r8
+			// we want R1 to store max and R2 to store min
+			CMP R5, R6					// compare first 2 arithmetic results
+  38:	e1550006 	cmp	r5, r6
+			MOVLT R1, R6				// R6 is max if R5 < R6
+  3c:	b1a01006 	movlt	r1, r6
+			MOVLT R2, R5				// R5 is min if R5 < R6
+  40:	b1a02005 	movlt	r2, r5
+			MOVGE R1, R5				// R5 is max if R5 >= R6
+  44:	a1a01005 	movge	r1, r5
+			MOVGE R2, R6				// R6 is min if R5 >= R6
+  48:	a1a02006 	movge	r2, r6
+			CMP R7, R1					// compare the third result with the maximum
+  4c:	e1570001 	cmp	r7, r1
+			MOVGT R1, R7				// R7 is max if R7 > R1
+  50:	c1a01007 	movgt	r1, r7
+			BGE DONE					// if R7 >= the max then max and min is found; if not, then need to compare with min to find minimum
+  54:	aa000002 	bge	64 <DONE>
+			CMP R7, R2					// compare the third result with minimum
+  58:	e1570002 	cmp	r7, r2
+			MOVLT R2, R7				// if R7 < R2, then R7 is the new minimum
+  5c:	b1a02007 	movlt	r2, r7
+			B DONE						// go to DONE since max and min are found
+  60:	eaffffff 	b	64 <DONE>
+
+00000064 <DONE>:
+			
+DONE:		STR R2, [R0, #20]			// R2 is minimum
+  64:	e5802014 	str	r2, [r0, #20]
+			STR R1, [R0, #16]			// R1 is maximum
+  68:	e5801010 	str	r1, [r0, #16]
+
+0000006c <END>:
+
+END: 		B END						// infinite loop!
+  6c:	eafffffe 	b	6c <END>
+
+00000070 <NUMBERS>:
+  70:	00000001 	.word	0x00000001
+  74:	00000002 	.word	0x00000002
+  78:	00000003 	.word	0x00000003
+  7c:	00000004 	.word	0x00000004
+
+00000080 <MAX>:
+  80:	00000000 	.word	0x00000000
+
+00000084 <MIN>:
+  84:	00000000 	.word	0x00000000
+  88:	00000070 	.word	0x00000070
