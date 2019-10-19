@@ -1,0 +1,65 @@
+
+//campus.mcgill.ca/EMF/ELE/ryang13/Desktop/ARM_LAB2/ARM/part1_3.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+// This program computes the factorial of a number
+			.text
+			.global _start
+
+_start:
+			LDR R0, =RESULT				// R0 points to the memory location of RESULT
+   0:	e59f0044 	ldr	r0, [pc, #68]	; 4c <N+0x4>
+			LDR R1, [R0, #4]			// R1 holds the number to be factorial
+   4:	e5901004 	ldr	r1, [r0, #4]
+			// Check if the number is 0, if 0 then return 1
+			TEQ R1, #0					// check if input is 0
+   8:	e3310000 	teq	r1, #0
+			MOVEQ R2, #1				// if input is 0 then just return 1
+   c:	03a02001 	moveq	r2, #1
+			BEQ DONE					// if input is 0 then do not need to compute factorial
+  10:	0a000009 	beq	3c <DONE>
+			// if number is not 0 then call factorial subroutine
+			MOV R2, R1					// The number N is stored in R2 (holds the result)
+  14:	e1a02001 	mov	r2, r1
+			BL FACTORIAL				// Call factorial
+  18:	eb000000 	bl	20 <FACTORIAL>
+			B DONE						// computation done
+  1c:	ea000006 	b	3c <DONE>
+
+00000020 <FACTORIAL>:
+
+FACTORIAL: 
+			SUBS R1, R1, #1				// decrement the number of elements to keep track of factorial operation
+  20:	e2511001 	subs	r1, r1, #1
+			BXEQ LR						// if n = 0, then we are done with factorial and just return 
+  24:	012fff1e 	bxeq	lr
+			MUL R2, R2, R1				// if n is not 0 yet, multiply current number by number - 1
+  28:	e0020192 	mul	r2, r2, r1
+			PUSH {LR}					// save current link register by pushing into stack
+  2c:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+			BL FACTORIAL				// recursively call factorial again
+  30:	ebfffffa 	bl	20 <FACTORIAL>
+			POP {LR}					// when each layer of factorial returns, pop out LR from stack to return
+  34:	e49de004 	pop	{lr}		; (ldr lr, [sp], #4)
+			BX LR						// go back to the calling instruction
+  38:	e12fff1e 	bx	lr
+
+0000003c <DONE>:
+
+DONE:		STR R2,[R0]					// store result in memory
+  3c:	e5802000 	str	r2, [r0]
+
+00000040 <END>:
+
+END: 		B END						// infinite loop!
+  40:	eafffffe 	b	40 <END>
+
+00000044 <RESULT>:
+  44:	00000000 	.word	0x00000000
+
+00000048 <N>:
+  48:	00000003 	.word	0x00000003
+  4c:	00000044 	.word	0x00000044

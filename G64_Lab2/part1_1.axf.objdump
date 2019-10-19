@@ -1,0 +1,35 @@
+
+C:/Users/Raymond Yang/Desktop/ARM/part1_1.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+// Author: Raymond Yang, Chang Zhou
+					.text
+					.global _start
+
+_start:
+				LDR		R0, =2				// load number 2 into R0
+   0:	e3a00002 	mov	r0, #2
+				PUSH	{R0}				// push value of R0 onto stack. SP is decremented first, value of R0 is stored in the memory location SP is pointing to
+   4:	e52d0004 	push	{r0}		; (str r0, [sp, #-4]!)
+				LDR		R0, =3				// load number 3 into R0
+   8:	e3a00003 	mov	r0, #3
+				PUSH	{R0}				// push value of R0 onto stack. SP is decremented first, value of R0 is stored in the memory location SP is pointing to
+   c:	e52d0004 	push	{r0}		; (str r0, [sp, #-4]!)
+				LDR		R0, =4				// load number 4 into R0
+  10:	e3a00004 	mov	r0, #4
+				PUSH	{R0}				// push value of R0 onto stack. SP is decremented first, value of R0 is stored in the memory location SP is pointing to
+  14:	e52d0004 	push	{r0}		; (str r0, [sp, #-4]!)
+				POP		{R1}				// pop stack to retrieve value and store in R2, R3, and R4
+  18:	e49d1004 	pop	{r1}		; (ldr r1, [sp], #4)
+				POP		{R2}				// stack structure is FIFO.
+  1c:	e49d2004 	pop	{r2}		; (ldr r2, [sp], #4)
+				POP		{R3}				// In this case we expect R1 = 4, R2 = 3, and R3 = 2
+  20:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+
+00000024 <END>:
+
+END:			B END						// end program by keeping it in infinite loop
+  24:	eafffffe 	b	24 <END>
