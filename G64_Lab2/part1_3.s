@@ -27,7 +27,7 @@ FACTORIAL:
 			BX LR						// go back to the calling instruction
 
 DONE:		STR R2,[R0]					// store result in memory
-
+	
 END: 		B END						// infinite loop!
 	
 RESULT: 	.word	0					// memory assigned for result location
