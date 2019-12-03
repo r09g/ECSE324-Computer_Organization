@@ -13,8 +13,8 @@ audio_write_ASM:
 	LDR R1, [R1]
 	
 	// put WSLC in R2 and WSRC in R1
-	LSR R1, R1, #16
-	LSR R2, R1, #8	
+	LSR R1, R1, #16	// WSRC
+	LSR R2, R1, #8	// WSLC	
 	AND R1, R1, #0xFF
 
 	// check if either buffer is full
